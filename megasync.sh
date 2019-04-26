@@ -7,9 +7,10 @@ while true; do
 		echo "PRESSED Y-DOWNLOAD PROXY"
 		curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1000&country=all" | awk  -F":" '{print "socks4",$1,$2}' > socks_list
 		break
-	else
+	fi
+	if [[ $input = "N" ]] || [[ $input = "n" ]];then
 		echo 
-		echo "PRESSED NOT Y-okey,we use file socks_file"
+		echo "PRESSED N-okey,we use file socks_file"
 		break
 	fi	
 done
@@ -22,10 +23,10 @@ do
 	echo "$i" >> proxychains.conf
 	echo "CHANGED PROXYCHAINS"
 	proxychains megasync 2>&1 2>result &
-	sleep 30;
+	sleep 20;
 	echo "CHECK FOR TIMEOUTS"
 	cat result
-	if [[ $(tail -n 10 result | grep "timeout\|denied" | wc -l) -gt 8 ]]; then
+	if [[ $(tail -n 10 result | grep -ai "timeout\|denied\|OK" | tail -n 5 | grep "timeout\|denied" | wc -l) -gt 4 ]]; then
 		echo "MANY TIMEOUTS OR DENIED MESSAGES-KILL MEGASYNC"
 		pkill megasync
 	else
