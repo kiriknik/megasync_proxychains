@@ -1,7 +1,19 @@
 IFS=$'\n'
-echo "DOWNLOAD proxy_list"
-curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1000&country=all" | awk  -F":" '{print "socks4",$1,$2}' >> socks4_list
-for i in $(cat socks4_list)
+echo "DO YOU WANT TO DOWNLOAD SOCKS LIST?(y/n)(If no-create file with proxy socks_list)"
+while true; do
+	read -n 1 -t 0.1 input
+	if [[ $input = "y" ]] || [[ $input = "Y" ]];then
+		echo 
+		echo "PRESSED Y-DOWNLOAD PROXY"
+		curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1000&country=all" | awk  -F":" '{print "socks4",$1,$2}' > socks_list
+		break
+	else
+		echo 
+		echo "PRESSED NOT Y-okey,we use file socks_file"
+		break
+	fi	
+done
+for i in $(cat socks_list)
 do	
 	echo "MAKE PROXYCHAINS.CONF FILE"
 	echo -e "strict_chain\\ntcp_read_time_out 15000\\ntcp_connect_time_out 8000\\n[ProxyList]" >proxychains.conf
@@ -12,6 +24,7 @@ do
 	proxychains megasync 2>&1 2>result &
 	sleep 20;
 	echo "CHECK FOR TIMEOUTS"
+	cat result
 	if [[ $(tail -n 5 result | grep "timeout\|denied" | wc -l) -gt 4 ]]; then
 		echo "MANY TIMEOUTS OR DENIED MESSAGES-KILL MEGASYNC"
 		pkill megasync
