@@ -1,12 +1,12 @@
 IFS=$'\n'
-curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1000&country=all" | awk  -F":" '{print "socks4",$1,$2}' > socks4_list
+echo "DOWNLOAD proxy_list"
+curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1000&country=all" | awk  -F":" '{print "socks4",$1,$2}' >> socks4_list
 for i in $(cat socks4_list)
 do	
-	echo "CHANGE PROXYCHAINS"
+	echo "MAKE PROXYCHAINS.CONF FILE"
+	echo -e "strict_chain\\ntcp_read_time_out 15000\\ntcp_connect_time_out 8000\\n[ProxyList]" >proxychains.conf
 	echo $i
-	head -n 70 proxychains.conf >proxychains_new.conf;
-	rm proxychains.conf;
-	mv proxychains_new.conf proxychains.conf
+	echo "ADD PROXY"
 	echo "$i" >> proxychains.conf
 	echo "CHANGED PROXYCHAINS"
 	proxychains megasync 2>&1 | tee result &
@@ -34,4 +34,5 @@ do
 	fi
 pkill megasync
 rm result
+rm proxychains.conf
 done
