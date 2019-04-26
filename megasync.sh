@@ -4,7 +4,7 @@ curl "https://api.proxyscrape.com/?request=getproxies&proxytype=socks4&timeout=1
 for i in $(cat socks4_list)
 do	
 	echo "MAKE PROXYCHAINS.CONF FILE"
-	echo -e "strict_chain\\ntcp_read_time_out 15000\\ntcp_connect_time_out 8000\\n[ProxyList]" >proxychains.conf
+	echo -e "strict_chain\\ntcp_read_time_out 15000\\ntcp_connect_time_out 8000\\n[ProxyList]" > proxychains.conf
 	echo $i
 	echo "ADD PROXY"
 	echo "$i" >> proxychains.conf
