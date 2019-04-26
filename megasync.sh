@@ -22,10 +22,10 @@ do
 	echo "$i" >> proxychains.conf
 	echo "CHANGED PROXYCHAINS"
 	proxychains megasync 2>&1 2>result &
-	sleep 20;
+	sleep 30;
 	echo "CHECK FOR TIMEOUTS"
 	cat result
-	if [[ $(tail -n 5 result | grep "timeout\|denied" | wc -l) -gt 4 ]]; then
+	if [[ $(tail -n 10 result | grep "timeout\|denied" | wc -l) -gt 8 ]]; then
 		echo "MANY TIMEOUTS OR DENIED MESSAGES-KILL MEGASYNC"
 		pkill megasync
 	else
