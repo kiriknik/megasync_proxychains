@@ -31,7 +31,7 @@ do
 		pkill megasync
 	else
 		if [[ $(cat result | wc -l) -lt 4 ]]; then
-			echo "LOOKS BAD-nothing in result=kill megasync"
+			echo "LOOKS BAD-small output=kill megasync"
 			pkill megasync
 		else
 			echo "LOOKS GOOD-DOWNLOAD NEXT"
