@@ -10,7 +10,7 @@ while true; do
 	fi
 	if [[ $input = "N" ]] || [[ $input = "n" ]];then
 		echo 
-		echo "PRESSED N-okey,we use file socks_file"
+		echo "PRESSED N-okey,we use file socks_list"
 		break
 	fi	
 done
